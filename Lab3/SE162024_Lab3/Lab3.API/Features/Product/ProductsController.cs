@@ -36,9 +36,9 @@ public class ProductsController : ControllerBase
         var query = new ProductByIdQuery(id);
         var result = await _handler.GetProductByIdHandler(query);
 
-        var response = result.Adapt<ProductResponse>();
+        var response = result.Adapt<GetProductByIdResponse>();
 
-        return Ok(new GetProductByIdResponse(response));
+        return Ok(response);
     }
 
     [HttpGet("")]
@@ -51,6 +51,17 @@ public class ProductsController : ControllerBase
         var response = result.Adapt<GetProductsRespone>();
 
         return Ok(response);
+    }
+
+    [HttpDelete("{id}")]
+    //[Authorize(Roles = Role.Admin)]
+    [AllowAnonymous]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        var command = new DeleteProductCommand(id);
+        var result = await _handler.DeleteProductHandler(command);
+
+        return Ok(result);
     }
 }
 

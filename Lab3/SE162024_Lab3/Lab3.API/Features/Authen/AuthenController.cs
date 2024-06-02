@@ -51,12 +51,12 @@ public class AuthenController : ControllerBase
         {
             new Claim("username", jwtRequest.Username),
             new Claim(ClaimTypes.NameIdentifier, "1"),
-            new Claim(ClaimTypes.Role, jwtRequest.role.ToString()),
+            new Claim(ClaimTypes.Role, jwtRequest.Role.ToString()),
         };
 
-        var token = _handler.GenerateJSONWebToken(claims, jwtRequest.validInMinutes);
+        var token = _handler.GenerateJSONWebToken(claims, jwtRequest.ValidInMinutes);
 
-        return Results.Ok(token);
+        return Results.Ok(new { Token = token });
     }
 }
 
@@ -66,4 +66,4 @@ public record LoginResponse(string Token);
 public record RegisterRequest(string Username, string Password);
 public record RegisterResponse(bool IsSuccess);
 
-public record GenJwtRequest(string Username, RoleEnum role, int validInMinutes);
+public record GenJwtRequest(string Username, RoleEnum Role, int ValidInMinutes);

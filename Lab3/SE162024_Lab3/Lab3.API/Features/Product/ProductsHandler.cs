@@ -72,6 +72,18 @@ public class ProductsHandler
         var result = new CreateProductResult(product);
         return result;
     }
+
+    public async Task<DeleteProductResult> DeleteProductHandler(DeleteProductCommand command)
+    {
+        var product = await _unitOfWork.Products.GetByIdAsync(command.ProductId);
+        if (product is null)
+            throw new NotFoundException($"Product {command.ProductId} not found");
+
+        await _unitOfWork.Products.Delete(product);
+        await _unitOfWork.SaveAsync();
+
+        return new DeleteProductResult(true);
+    }
 }
 
 public record ProductsQuery(int PageIndex = 0, int PageSize = 10, string Search = "", string OrderBy = "", bool OrderDesc = false);
@@ -82,3 +94,6 @@ public record ProductByIdResult(Infra.Models.Product Product);
 
 public record CreateProductCommand(ProductCreating Product);
 public record CreateProductResult(Infra.Models.Product Product);
+
+public record DeleteProductCommand(int ProductId);
+public record DeleteProductResult(bool IsDeleted);
