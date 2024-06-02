@@ -66,4 +66,4 @@ public record LoginResponse(string Token);
 public record RegisterRequest(string Username, string Password);
 public record RegisterResponse(bool IsSuccess);
 
-public record GenJwtRequest(string Username, Role role, int validInMinutes);
+public record GenJwtRequest(string Username, RoleEnum role, int validInMinutes);

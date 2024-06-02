@@ -1,16 +1,9 @@
-﻿namespace Lab3.Infra.Models;
+﻿namespace Lab3.API.Models.Product;
 
-public partial class Product
+public class ProductCreating
 {
-    public int Id { get; set; }
-
     public string Name { get; set; } = null!;
-
     public int UnitsInStock { get; set; }
-
     public decimal UnitPrice { get; set; }
-
     public int CategoryId { get; set; }
-
-    public virtual Category Category { get; set; } = null!;
 }

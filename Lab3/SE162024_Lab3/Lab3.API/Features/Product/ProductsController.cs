@@ -1,5 +1,6 @@
-﻿using Lab3.API.Helper;
-using Lab3.Infra.Models;
+﻿using Lab3.API.Models;
+using Lab3.API.Models.Product;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,25 +11,53 @@ namespace Lab3.API.Features.Product;
 public class ProductsController : ControllerBase
 {
     private readonly ProductsHandler _handler;
-    private readonly JwtTokenHelper _tokenHelper;
 
-    public ProductsController(ProductsHandler handler, JwtTokenHelper tokenHelper)
+    public ProductsController(ProductsHandler handler)
     {
         _handler = handler;
-        _tokenHelper = tokenHelper;
     }
 
     [HttpPost("")]
-    [Authorize(Roles = Role.Admin)]
-    public IResult CreateProduct()
+    //[Authorize(Roles = Role.Admin)]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
-        return Results.Ok(new { msg = "Okey, create product here!" });
+        var command = new CreateProductCommand(request.Product);
+        var result = await _handler.CreateProduct(command);
+
+        var response = new CreateProductResponse(result.Product.Adapt<ProductResponse>());
+        return Created($"{result.Product.Id}", response);
+    }
+
+    [HttpGet("{id}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetProductById(int id)
+    {
+        var query = new ProductByIdQuery(id);
+        var result = await _handler.GetProductByIdHandler(query);
+
+        var response = result.Adapt<ProductResponse>();
+
+        return Ok(new GetProductByIdResponse(response));
     }
 
     [HttpGet("")]
     [AllowAnonymous]
-    public IResult GetProducts()
+    public async Task<IActionResult> GetProducts([FromQuery] PaginationRequest productsRequest)
     {
-        return Results.Ok(new { msg = "Okey, get products here!" });
+        var productsQuery = productsRequest.Adapt<ProductsQuery>();
+        var result = await _handler.GetProductsHandler(productsQuery);
+
+        var response = result.Adapt<GetProductsRespone>();
+
+        return Ok(response);
     }
 }
+
+//public record GetProductsRequest(int? PageIndex = 0, int? PageSize = 10, string? Search = "", string? OrderBy = "", bool? OrderDesc = false);
+public record GetProductsRespone(IEnumerable<ProductResponse> Products, int Total, int PageIndex, int PageSize);
+
+public record CreateProductRequest(ProductCreating Product);
+public record CreateProductResponse(ProductResponse Product);
+
+public record GetProductByIdResponse(ProductResponse Product);

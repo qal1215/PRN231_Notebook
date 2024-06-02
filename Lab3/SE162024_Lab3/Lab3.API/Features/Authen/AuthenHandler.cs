@@ -34,7 +34,7 @@ public class AuthenHandler
         var claims = new Claim[]
         {
             new Claim("username", user.Username),
-            new Claim(ClaimTypes.NameIdentifier,user.Accountid.ToString()!),
+            new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()!),
             new Claim(ClaimTypes.Role, user.Role.ToString()!),
         };
 
@@ -53,7 +53,7 @@ public class AuthenHandler
         }
 
         var account = command.Adapt<Account>();
-        account.Role = Role.User;
+        account.Role = RoleEnum.User;
         await _unitOfWork.Accounts.InsertAsync(account);
         await _unitOfWork.SaveAsync();
 

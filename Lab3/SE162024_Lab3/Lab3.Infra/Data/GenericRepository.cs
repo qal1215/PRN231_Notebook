@@ -7,7 +7,7 @@ public interface IGenericRepository<TEntity>
 {
     Task Delete(object id);
     Task Delete(TEntity entityToDelete);
-    Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "");
+    Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, int pageIndex = 0, int pageSize = 10, string includeProperties = "");
     Task<TEntity?> GetByIdAsync(object id);
     Task InsertAsync(TEntity entity);
     Task<bool> IsExist(object id);
@@ -26,9 +26,18 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         dbSet = context.Set<TEntity>();
     }
 
+    public virtual IQueryable<TEntity> GetQueryable()
+    {
+        IQueryable<TEntity> query = dbSet;
+
+        return query;
+    }
+
     public virtual async Task<IEnumerable<TEntity>> GetAsync(
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            int pageIndex = 0,
+            int pageSize = 10,
             string includeProperties = "")
     {
         IQueryable<TEntity> query = dbSet;
@@ -46,12 +55,12 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
         if (orderBy != null)
         {
-            return await orderBy(query).ToListAsync();
+            query = orderBy(query);
         }
-        else
-        {
-            return await query.ToListAsync();
-        }
+
+        query = query.Skip(pageIndex * pageSize).Take(pageSize);
+
+        return await query.ToListAsync();
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(object id) => await dbSet.FindAsync(id);
@@ -88,6 +97,19 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     public virtual async Task<bool> IsExist(object id)
     {
         return (await GetByIdAsync(id)) is not null;
+    }
+
+    public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null)
+    {
+        IQueryable<TEntity> query = dbSet;
+
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        var result = await query.CountAsync();
+        return result;
     }
 }
 

@@ -1,4 +1,5 @@
 using FluentValidation;
+using Lab3.API.CustomExtensions;
 using Lab3.API.Exceptions.Handler;
 using Lab3.API.Features.Authen;
 using Lab3.API.Features.Product;
@@ -12,13 +13,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options =>
-{
-    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-});
+builder.Services
+    .AddControllers(options =>
+    {
+        options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+    })
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower;
+
+        options.JsonSerializerOptions.Converters
+        .Add(new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower));
+    });
 
 builder.Services.AddRouting(options =>
 {
@@ -99,6 +110,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseMigrationAsync().Wait();
 }
 
 app.UseExceptionHandler(handler => { });

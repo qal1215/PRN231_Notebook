@@ -24,8 +24,4 @@
     <ProjectReference Include="..\Lab3.Infra\Lab3.Infra.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CustomExtensions\" />
-  </ItemGroup>
-
 </Project>

@@ -1,6 +1,6 @@
-﻿namespace Lab3.Infra.Models;
+﻿namespace Lab3.API.Models.Product;
 
-public partial class Product
+public record ProductResponse
 {
     public int Id { get; set; }
 
@@ -12,5 +12,5 @@ public partial class Product
 
     public int CategoryId { get; set; }
 
-    public virtual Category Category { get; set; } = null!;
+    public string CategoryName { get; set; } = null!;
 }
