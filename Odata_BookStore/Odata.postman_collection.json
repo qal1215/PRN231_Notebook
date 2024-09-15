@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "aec44928-1ecd-48f1-89bd-89e311e2f70f",
+		"name": "Odata",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36799123"
+	},
+	"item": [
+		{
+			"name": "Q01-SelectTitle,Author",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7186/odata/Books?$select=Title,Author",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7186",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "Title,Author"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7186/odata/Books?$filter=Author%20eq%20%27Adam%20Freeman%27",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7186",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "Author%20eq%20%27Adam%20Freeman%27"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7186/odata/Books?$orderby=Price desc",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7186",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$orderby",
+							"value": "Price desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7186/odata/Books?$expand=Press",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7186",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$expand",
+							"value": "Press"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7186/odata/Books?$filter=Price gt 20&$select=Title,Author,Price&$orderby=Title&$top=10",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7186",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "Price gt 20"
+						},
+						{
+							"key": "$select",
+							"value": "Title,Author,Price"
+						},
+						{
+							"key": "$orderby",
+							"value": "Title"
+						},
+						{
+							"key": "$top",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7186/odata/Books?$top=1&$skip=2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7186",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$top",
+							"value": "1"
+						},
+						{
+							"key": "$skip",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
